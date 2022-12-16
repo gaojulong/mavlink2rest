@@ -382,3 +382,73 @@ The following benchmarks were extracted from a raspberry pi 3 connected to a pix
     Average time per request  137ms
     Sample standard deviation 54ms
     ```
+
+## Build
+
+-[编译过程参考](https://stackoverflow.com/questions/39705213/cross-compiling-rust-from-windows-to-arm-linux)
+
+[安装 Rusth官网](https://www.rust-lang.org/zh-CN/tools/install)
+
+**1、设置环境变量**
+
+```shell
+export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
+export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+```
+
+**2、安装**
+
+```shell
+# 下载并执行脚本
+$curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+# 选择默认
+>1
+# 加载
+$source "$HOME/.cargo/env"
+# 查看版本
+$rustc -V
+# rustc 1.62.0 (a8314ef7d 2022-06-27)
+```
+
+![image-20221214144005278](images/image-20221214144005278.png)
+
+**克隆仓库：**
+
+~~~shell
+git clone https://github.com/gaojulong/mavlink2rest.git
+~~~
+
+**安装arm gcc链接工具**
+
+- **Win 10** Get the linker from [here](https://gnutoolchains.com/raspberry/), and run:
+- [本地安装包](src/raspberry-gcc10.2.1.exe)
+- ![image-20221215154225556](images/image-20221215154225556.png)
+- ![enter image description here](images/epv7A.png)
+
+**注意：此步骤要重启电脑才能生效**
+
+**编译:**
+
+~~~shell
+$ cargo build
+~~~
+
+**生成可执行文件**
+
+```
+\mavlink2rest\target\armv7-unknown-linux-gnueabihf\debug\mavlink2rest
+```
+
+**测试：**
+
+~~~shell
+# 上传到树莓派
+scp ./mavlink2rest pi@192.168.2.2:~/
+# 添加执行权限
+sudo chmod +x mavlink2rest
+# 启动 ,需要在http://192.168.2.2/autopilot/endpoints添加一个服务，如下图
+mavlink2rest --connect=udpin:127.0.0.1:14002 --server 0.0.0.0:8088
+# 打开网址
+~~~
+
+![image-20221215160859615](images/image-20221215160859615.png)
