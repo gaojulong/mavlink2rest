@@ -41,12 +41,12 @@ pub fn run(server_address: &str, mavlink_vehicle: &MAVLinkVehicleArcMutex) {
                 r"/{filename:.*(\.html|\.js)}",
                 web::get().to(endpoints::root),
             )
-            .route("/helper/mavlink", web::get().to(endpoints::helper_mavlink))
+            .route("/helper/rov", web::get().to(endpoints::helper_mavlink))
             .route("/info", web::get().to(endpoints::info))
-            .route("/mavlink", web::get().to(endpoints::mavlink))
-            .route("/mavlink", web::post().to(endpoints::mavlink_post))
-            .route(r"/mavlink/{path:.*}", web::get().to(endpoints::mavlink))
-            .service(web::resource("/ws/mavlink").route(web::get().to(endpoints::websocket)))
+            .route("/rov", web::get().to(endpoints::mavlink))
+            .route("/rov", web::post().to(endpoints::mavlink_post))
+            .route(r"/rov/{path:.*}", web::get().to(endpoints::mavlink))
+            .service(web::resource("/ws/rov").route(web::get().to(endpoints::websocket)))
             .build()
     })
     .bind(server_address)
